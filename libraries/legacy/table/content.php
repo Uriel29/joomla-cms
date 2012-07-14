@@ -1,7 +1,7 @@
 <?php
 /**
- * @package     Joomla.Platform
- * @subpackage  Database
+ * @package     Joomla.Legacy
+ * @subpackage  Table
  *
  * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Content table
  *
- * @package     Joomla.Platform
+ * @package     Joomla.Legacy
  * @subpackage  Table
  * @since       11.1
  */
@@ -115,7 +115,7 @@ class JTableContent extends JTable
 	public function bind($array, $ignore = '')
 	{
 		// Search for the {readmore} tag and split the text up accordingly.
-		if (isset($array['articletext']))
+		if (!empty($array['articletext']))
 		{
 			$pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
 			$tagPos = preg_match($pattern, $array['articletext']);
@@ -186,12 +186,6 @@ class JTableContent extends JTable
 		if (trim(str_replace('&nbsp;', '', $this->fulltext)) == '')
 		{
 			$this->fulltext = '';
-		}
-
-		if (trim($this->introtext) == '' && trim($this->fulltext) == '')
-		{
-			$this->setError(JText::_('JGLOBAL_ARTICLE_MUST_HAVE_TEXT'));
-			return false;
 		}
 
 		// Check the publish down date is not earlier than publish up.
