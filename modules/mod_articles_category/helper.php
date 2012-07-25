@@ -241,7 +241,7 @@ abstract class modArticlesCategoryHelper
 				$item->introtext = JHtml::_('content.prepare', $item->introtext, '', 'mod_articles_category.content');
 				$item->introtext = self::_cleanIntrotext($item->introtext);
 			}
-			$item->displayIntrotext = $show_introtext ? self::truncate($item->introtext, $introtext_limit) : '';
+			$item->displayIntrotext = $show_introtext ? self::truncateComplex($item->introtext, $introtext_limit) : '';
 			// added Angie show_unauthorizid
 			$item->displayReadmore = $item->alternative_readmore;
 
@@ -262,110 +262,117 @@ abstract class modArticlesCategoryHelper
 	}
 
 	/**
-	* This is a better truncate implementation than what we
-	* currently have available in the library. In particular,
-	* on index.php/Banners/Banners/site-map.html JHtml's truncate
-	* method would only return "Article...". This implementation
-	* was taken directly from the Stack Overflow thread referenced
-	* below. It was then modified to return a string rather than
-	* print out the output and made to use the relevant JString
-	* methods.
-	*
-	* @link http://stackoverflow.com/questions/1193500/php-truncate-html-ignoring-tags
-	* @param mixed $html
-	* @param mixed $maxLength
+	* Method to extend the truncate method to more complex situations 
+	* 
+	* The goal is to get the proper length plain text string with as much of 
+	* the html intact as possible with all tags properly closed.
+	* 
+	* @param   string   $html       The content of the introtext to be truncated
+	* @param   integer  $maxLength  The maximum number of characters to render
+	* @param   boolean  $noSplit    Don't split a word if that is where the cutoff occurs (default: true).
+	* 
+	* @return  string  The truncated string. If the string is truncated an ellipsis
+	*                  (...) will be appended.
+	*  
+	* @note: If a maximum length of 3 or less is selected and the text has more than
+	*        that number of characters an ellipsis will be displayed.
+	*        This method will not create valid HTML from malformed HTML.
+	* 
+	* @since   2.5
 	*/
-	public static function truncate($html, $maxLength = 0)
+	public static function truncateComplex($html, $maxLength = 0, $noSplit = true)
 	{
-		$printedLength = 0;
-		$position = 0;
-		$tags = array();
+		// Start with some basic rules.
+		$baseLength = strlen($html);
 
-		$output = '';
-
-		if (empty($html)) {
-			return $output;
-		}
-
-		while ($printedLength < $maxLength && preg_match('{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}', $html, $match, PREG_OFFSET_CAPTURE, $position))
+		// If the original HTML string is shorter than the $maxLength do nothing and return that.
+		if ($baseLength <= $maxLength || $maxLength == 0)
 		{
-			list($tag, $tagPosition) = $match[0];
-
-			// Print text leading up to the tag.
-			$str = JString::substr($html, $position, $tagPosition - $position);
-			if ($printedLength + JString::strlen($str) > $maxLength) {
-				$output .= JString::substr($str, 0, $maxLength - $printedLength);
-				$printedLength = $maxLength;
-				break;
-			}
-
-			$output .= $str;
-			$lastCharacterIsOpenBracket = (JString::substr($output, -1, 1) === '<');
-
-			if ($lastCharacterIsOpenBracket) {
-				$output = JString::substr($output, 0, JString::strlen($output) - 1);
-			}
-
-			$printedLength += JString::strlen($str);
-
-			if ($tag[0] == '&') {
-				// Handle the entity.
-				$output .= $tag;
-				$printedLength++;
-			}
-			else {
-				// Handle the tag.
-				$tagName = $match[1][0];
-
-				if ($tag[1] == '/') {
-					// This is a closing tag.
-					$openingTag = array_pop($tags);
-
-					$output .= $tag;
-				}
-				elseif ($tag[JString::strlen($tag) - 2] == '/') {
-					// Self-closing tag.
-					$output .= $tag;
-				}
-				else {
-					// Opening tag.
-					$output .= $tag;
-					$tags[] = $tagName;
-				}
-			}
-
-			// Continue after the tag.
-			if ($lastCharacterIsOpenBracket) {
-				$position = ($tagPosition - 1) + JString::strlen($tag);
-			}
-			else {
-				$position = $tagPosition + JString::strlen($tag);
-			}
-
+			return $html;
 		}
 
-		// Print any remaining text.
-		if ($printedLength < $maxLength && $position < JString::strlen($html)) {
-			$output .= JString::substr($html, $position, $maxLength - $printedLength);
-		}
-
-		// Close any open tags.
-		while (!empty($tags))
+		// Take care of short simple cases.
+		if ($maxLength <= 3 && substr($html, 0, 1) != '<' && strpos(substr($html, 0, $maxLength - 1), '<') === false && $baseLength > $maxLength)
 		{
-			$output .= sprintf('</%s>', array_pop($tags));
+			return '...';
 		}
 
-		$length = JString::strlen($output);
-		$lastChar = JString::substr($output, ($length - 1), 1);
-		$characterNumber = ord($lastChar);
+		// Deal with maximum length of 1 where the string starts with a tag.
+		if ($maxLength == 1 && substr($html, 0, 1) == '<')
+		{
+			$endTagPos = strlen(strstr($html, '>', true));
+			$tag = substr($html, 1, $endTagPos);
 
-		if ($characterNumber === 194) {
-			$output = JString::substr($output, 0, JString::strlen($output) - 1);
+			$l = $endTagPos + 1;
+			if ($noSplit)
+			{
+				return substr($html, 0, $l) . '</' . $tag . '...';
+			}
+			$character = substr(strip_tags($html), 0, 1);
+
+			return substr($html, 0, $l) . '</' . $tag . '...';
 		}
 
-		$output = JString::rtrim($output);
+		// First get the truncated plain text string. This is the rendered text we want to end up with.
+		$ptString = JHtml::_('string.truncate', $html, $maxLength, $noSplit, $allowHtml = false);
 
-		return $output.'&hellip;';
+		// It's all HTML, just return it.
+		if (strlen($ptString) == 0)
+		{
+				return $html;
+		}
+
+		// If the plain text is shorter than the max length the variable will not end in ...
+		// In that case we use the whole string.
+		if (substr($ptString, -3) != '...')
+		{
+				return $html;
+		}
+
+		// Regular truncate gives us the ellipsis but we want to go back for text and tags.
+		if ($ptString == '...')
+		{
+			$stripped = substr(strip_tags($html), 0, $maxLength);
+			$ptString = JHtml::_('string.truncate', $stripped, $maxLength, $noSplit, $allowHtml = false);
+		}
+		// We need to trim the ellipsis that truncate adds.
+		$ptString = rtrim($ptString, '.');
+
+		// Now deal with more complex truncation.
+		$diffLength = 0;
+		for (; $maxLength <= $baseLength;)
+		{
+			// Get the truncated string assuming HTML is allowed.
+			$htmlString = JHtml::_('string.truncate', $html, $maxLength, $noSplit, $allowHtml = true);
+
+			if ($htmlString == '...' && strlen($ptString) + 3 > $maxLength)
+			{
+				return $htmlString;
+			}
+
+			$htmlString = rtrim($htmlString, '.');
+
+			// Now get the plain text from the HTML string and trim it.
+			$htmlStringToPtString = JHtml::_('string.truncate', $htmlString, $maxLength, $noSplit, $allowHtml = false);
+			$htmlStringToPtString = rtrim($htmlStringToPtString, '.');
+
+			// If the new plain text string matches the original plain text string we are done.
+			if ($ptString == $htmlStringToPtString)
+			{
+				return $htmlString . '...';
+			}
+
+			// Get the number of HTML tag characters in the first $maxLength characters
+			$diffLength = strlen($ptString) - strlen($htmlStringToPtString);
+
+			if ($diffLength <= 0)
+			{
+				return $htmlString . '...';
+			}
+
+			// Set new $maxlength that adjusts for the HTML tags
+			$maxLength += $diffLength;
+		}
 	}
 
 	public static function groupBy($list, $fieldName, $article_grouping_direction, $fieldNameToKeep = null)
