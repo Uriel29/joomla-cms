@@ -694,13 +694,13 @@ p.tab-description {
 }
 
 div.cpanel-icons {
-	width: 54%;
+	width: 35%;
 	float: left;
 }
 
 div.cpanel-component {
 	width: 45%;
-	float: right;
+	float: left;
 }
 
 /**
@@ -2744,6 +2744,11 @@ fieldset.uploadform {
 #toolbar-save-copy {
 	float: left;
 }
-
-
+#toolbar-save-new {
+	float: left;
+}
+.icon-48-cpanel {
+	height: 50px;
+	width: 50%;
+}
 
