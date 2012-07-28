@@ -2662,3 +2662,88 @@ fieldset.uploadform {
 	float: left;
 	margin-right: 15px;
 }
+
+#toolbar-apply {
+	float: left;
+}
+#toolbar-save {
+	float: left;
+}
+#toolbar-cancel {
+	float: left;
+}
+#toolbar-help {
+	float: left;
+}
+#toolbar-new {
+	float: left;
+}
+#toolbar-edit {
+	float: left;
+}
+#toolbar-publish {
+	float: left;
+}
+#toolbar-unpublish {
+	float: left;
+}
+#toolbar-archive {
+	float: left;
+}
+#toolbar-block {
+	float: left;
+}
+#toolbar-unblock {
+	float: left;
+}
+#toolbar-delete {
+	float: left;
+}
+#toolbar-popup-options {
+	float: left;
+}
+#toolbar-trash {
+	float: left;
+}
+#toolbar-checkin {
+	float: left;
+}
+#toolbar-send {
+	float: left;
+}
+#toolbar-refresh {
+	float: left;
+}
+#toolbar-default {
+	float: left;
+}
+#toolbar-featured {
+	float: left;
+}
+#toolbar-remove {
+	float: left;
+}
+#toolbar-upload {
+	float: left;
+}
+#toolbar-folder {
+	float: left;
+}
+#toolbar-popup-stats {
+	float: left;
+}
+#toolbar-popup-options {
+	float: left;
+}
+#toolbar-popup-archive {
+	float: left;
+}
+#toolbar-copy {
+	float: left;
+}
+#toolbar-save-copy {
+	float: left;
+}
+
+
+
