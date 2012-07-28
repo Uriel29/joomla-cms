@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 ?>
-<ul class="nav nav-list">
+<?php /* ?><ul class="nav nav-list">
 	<?php
 		if ($this->userIsSuperAdmin):
 	?>
@@ -31,4 +31,16 @@ defined('_JEXEC') or die;
 	<?php
 		endforeach;
 	?>
+	
 </ul>
+<?php */ ?>
+<div id="nav-header">
+	<ul id="submenu" class="nav-header">
+		<li><a href="#" onclick="return false;" id="site" class="active"><?php echo JText::_('JSITE'); ?></a></li>
+		<li><a href="#" onclick="return false;" id="system"><?php echo JText::_('COM_CONFIG_SYSTEM'); ?></a></li>
+		<li><a href="#" onclick="return false;" id="server"><?php echo JText::_('COM_CONFIG_SERVER'); ?></a></li>
+		<li><a href="#" onclick="return false;" id="permissions"><?php echo JText::_('COM_CONFIG_PERMISSIONS'); ?></a></li>
+		<li><a href="#" onclick="return false;" id="filters"><?php echo JText::_('COM_CONFIG_TEXT_FILTERS')?></a></li>
+	</ul>
+	<div class="clr"></div>
+</div>
