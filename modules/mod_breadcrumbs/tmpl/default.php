@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 ?>
-
+<div class="breadcrumbs<?php echo $moduleclass_sfx; ?>">
 <ul class="breadcrumb <?php echo $moduleclass_sfx; ?>">
 <?php if ($params->get('showHere', 1))
 	{
@@ -45,3 +45,4 @@ defined('_JEXEC') or die;
 	echo '<li>';
 endfor; ?>
 </ul>
+</div>
