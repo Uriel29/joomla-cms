@@ -126,31 +126,36 @@ endif;
 		<!-- System Messages -->
 		<jdoc:include type="message" />
 		<!-- Sub Menu Navigation -->
-		<div id="no-submenu"></div>
    		<div class="clr"></div>
 
 		<!-- Beginning of Actual Content -->
-		<div id="element-box">
+		<div id="element-box span12">
 			<p id="skiptargetholder"><a id="skiptarget" class="skip" tabindex="-1"></a></p>
-
 				<div class="adminform">
 
 					<!-- Display the Quick Icon Shortcuts -->
-					<div class="cpanel-icons well">
+					<div class="cpanel-icons well span2">
 						<?php if ($this->countModules('icon') > 1):?>
 							<?php echo JHtml::_('sliders.start', 'position-icon', array('useCookie' => 1));?>
-							<jdoc:include type="modules" name="icon" />
+								<jdoc:include type="modules" name="icon" />
 							<?php echo JHtml::_('sliders.end');?>
 						<?php else:?>
 							<jdoc:include type="modules" name="icon" />
 						<?php endif;?>
 					</div>
-
-					<!-- Display Admin Information Panels -->
-					<div class="cpanel-component well">
-						<jdoc:include type="component" />
+					<div class="span5" >
+						<!-- Display Admin Information Panels -->
+						<?php $cpanelModules = JModuleHelper::getModules('cpanel');
+						foreach ($cpanelModules as $cpanelModule)
+						{ ?>
+							<div class="cpanel-component well">
+								<?php $attribs['style'] = 'xhtml'; ?>
+								<?php $output = JModuleHelper::renderModule($cpanelModule, $attribs);
+									echo $output;
+								 ?>
+							</div>
+						<?php } ?>
 					</div>
-
 				</div>
 				<div class="clr"></div>
 
