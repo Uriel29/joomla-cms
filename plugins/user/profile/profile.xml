@@ -156,7 +156,15 @@
 					<option	value="1">JOPTION_OPTIONAL</option>
 					<option	value="0">JDISABLED</option>
 				</field>
-
+				<field
+					name="register-require_color"
+					type="list"
+					label="PLG_USER_PROFILE_FIELD_color_LABEL"
+					description="PLG_USER_PROFILE_FIELD_color_DESC">
+					<option	value="2">JOPTION_REQUIRED</option>
+					<option	value="1">JOPTION_OPTIONAL</option>
+					<option	value="0">JDISABLED</option>
+				</field>
 				<field name="spacer1" type="spacer"
 					hr="true"
 				/>
@@ -274,8 +282,19 @@
 					<option	value="1">JOPTION_OPTIONAL</option>
 					<option	value="0">JDISABLED</option>
 				</field>
-			</fieldset>
+				<field
+					name="profile-require_color"
+					type="list"
 
+					label="PLG_USER_PROFILE_FIELD_color_LABEL"
+					description="PLG_USER_PROFILE_FIELD_color_DESC"
+				 >
+					<option	value="2">JOPTION_REQUIRED</option>
+					<option	value="1">JOPTION_OPTIONAL</option>
+					<option	value="0">JDISABLED</option>
+				</field>
+
+			</fieldset>
 		</fields>
 	</config>
 </extension>
