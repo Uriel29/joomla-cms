@@ -23,14 +23,17 @@ defined('_JEXEC') or die;
 <?php
 foreach ($list as $i => &$item) :
 	$class = 'item-'.$item->id;
-	if ($item->id == $active_id) {
+	if ($item->id == $active_id)
+	{
 		$class .= ' current';
 	}
 
-	if (in_array($item->id, $path)) {
+	if (in_array($item->id, $path))
+	{
 		$class .= ' active';
 	}
-	elseif ($item->type == 'alias') {
+	elseif ($item->type == 'alias')
+	{
 		$aliasToId = $item->params->get('aliasoptions');
 		if (count($path) > 0 && $aliasToId == $path[count($path) - 1]) {
 			$class .= ' active';
@@ -40,20 +43,24 @@ foreach ($list as $i => &$item) :
 		}
 	}
 
-	if ($item->type == 'separator') {
+	if ($item->type == 'separator')
+	{
 		$class .= ' divider';
 	}
 
-	if ($item->deeper) {
+	if ($item->deeper)
+	{
 		$class .= ' deeper';
 	}
 
-	if ($item->parent) {
+	if ($item->parent)
+	{
 		$class .= ' parent';
 	}
 
-	if (!empty($class)) {
-		$class = ' class="'.trim($class) .'"';
+	if (!empty($class))
+	{
+		$class = ' class="' . trim($class) . '"';
 	}
 
 	echo '<li'.$class.'>';
@@ -64,7 +71,8 @@ foreach ($list as $i => &$item) :
 		case 'url':
 		case 'component':
 		case 'heading':
-			require JModuleHelper::getLayoutPath('mod_menu', 'default_'.$item->type);
+		case 'logout':
+			require JModuleHelper::getLayoutPath('mod_menu', 'default_' . $item->type);
 			break;
 
 		default:

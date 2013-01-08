@@ -82,6 +82,11 @@ $document = JFactory::getDocument();
 					<?php echo JText::_('COM_MENUS_TYPE_HEADING'); ?> <small class="muted"><?php echo JText::_('COM_MENUS_TYPE_HEADING_DESC'); ?></small>
 				</a>
 			</li>
+			<li><a class="choose_type" href="" title="<?php echo JText::_('COM_MENUS_TYPE_LOGOUT_DESC'); ?>"
+					onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title' => 'logout'))); ?>')">
+					<?php echo JText::_('COM_MENUS_TYPE_LOGOUT'); ?> <?php echo JText::_('COM_MENUS_TYPE_LOGOUT_DESC'); ?>
+				</a>
+			</li>
 		</ul>
 	<?php echo JHtml::_('bootstrap.endSlide'); ?>
 <?php echo JHtml::_('bootstrap.endAccordion'); ?>

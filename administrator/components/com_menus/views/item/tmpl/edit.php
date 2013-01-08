@@ -85,6 +85,17 @@ $assoc = isset($app->item_associations) ? $app->item_associations : 0;
 							</div>
 						<?php endif; ?>
 
+						<?php if ($this->item->type == 'logout'): ?>
+							<div class="control-group">
+								<div class="control-label">
+									<?php echo $this->form->getLabel('returnUrl'); ?>
+								</div>
+								<div class="controls">
+									<?php echo $this->form->getInput('returnUrl'); ?>
+								</div>
+							</div>
+						<?php endif; ?>
+
 						<?php if ($this->item->link == 'index.php?option=com_wrapper&view=wrapper'): ?>
 							<?php $fieldSets = $this->form->getFieldsets('params'); ?>
 							<?php foreach ($this->form->getFieldset('request') as $field) : ?>
